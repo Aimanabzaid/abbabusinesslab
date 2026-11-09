@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="marca/icono-app.png">
-<meta name="theme-color" content="#121A22">
+<meta name="theme-color" content="#2A1F19">
 <meta property="og:title" content="ABBA Business Lab">
 <meta property="og:description" content="Páginas web con automatizaciones para centros de estética y clínicas.">
 <title>ABBA Business Lab</title>
@@ -17,17 +17,17 @@
 <style>
 /* Layout: un laboratorio limpio. Columna editorial a la izquierda, "pruebas" vivas (web + registro de automatizaciones) a la derecha. */
 :root{
-  --bg:#F3F7F6;
+  --bg:#F6F7F7;
   --surface:#FFFFFF;
-  --ink:#121A22;
-  --muted:#56626C;
-  --line:#D9DFE2;
-  --accent:#0B7A72;
+  --ink:#2A1F19;
+  --muted:#76675D;
+  --line:#E4DFDA;
+  --accent:#6B4A35;
   --accent-ink:#FFFFFF;
-  --accent-soft:#DCF1ED;
-  --accent-2:#5FD3C4;
-  --blush:#F3DDD6;
-  --blush-ink:#7A3E2E;
+  --accent-soft:#F0E9E3;
+  --accent-2:#B48A66;
+  --blush:#EFE6DE;
+  --blush-ink:#5E3F2C;
   --ok:#1E7A4F;
   --ok-soft:#DDF1E6;
   --f-display:"Unbounded", "Arial Black", system-ui, sans-serif;
@@ -37,16 +37,16 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
-    --accent:#4FD1C1; --accent-ink:#06201D; --accent-soft:#123630; --accent-2:#4FD1C1;
-    --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
+    --bg:#15100D; --surface:#1F1814; --ink:#F4F1EE; --muted:#B4A69B; --line:#352A22;
+    --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#2D231C; --accent-2:#E3C6A6;
+    --blush:#2A201A; --blush-ink:#EBD2BE; --ok:#5BD49A; --ok-soft:#14301F;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
-  --accent:#4FD1C1; --accent-ink:#06201D; --accent-soft:#123630; --accent-2:#4FD1C1;
-  --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
+  --bg:#15100D; --surface:#1F1814; --ink:#F4F1EE; --muted:#B4A69B; --line:#352A22;
+  --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#2D231C; --accent-2:#E3C6A6;
+  --blush:#2A201A; --blush-ink:#EBD2BE; --ok:#5BD49A; --ok-soft:#14301F;
   color-scheme:dark;
 }
 
@@ -108,7 +108,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 /* Prueba visual: web de clínica + registro */
 .demo{position:relative;min-width:0}
 .demo-tag{position:absolute;top:-12px;left:18px;z-index:2;font:500 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:7px 10px;border-radius:6px}
-.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(18,26,34,.35)}
+.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(42,31,25,.35)}
 .browser-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line)}
 .browser-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
 .browser-bar .url{margin-left:10px;flex:1;min-width:0;font:400 12.5px/1 var(--f-mono);color:var(--muted);background:var(--bg);padding:7px 10px;border-radius:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -159,7 +159,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 
 /* Caso real */
 .case{background:var(--ink);color:var(--bg)}
-.case .label{color:#7FE3D6}
+.case .label{color:#DDBE9C}
 .case .lead{color:color-mix(in srgb, var(--bg) 72%, transparent)}
 .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .case-list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid color-mix(in srgb, var(--bg) 18%, transparent)}
@@ -290,7 +290,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .example-copy{display:grid;gap:16px;min-width:0}
 .example-copy h2{color:var(--ink)}
 .example-copy .btn{width:max-content}
-.example-shot{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(18,26,34,.45);min-width:0}
+.example-shot{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(42,31,25,.45);min-width:0}
 .ex-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);font:400 12px/1 var(--f-mono);color:var(--muted)}
 .ex-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
 .ex-bar span{margin-left:8px}
@@ -341,7 +341,7 @@ footer{padding-bottom:calc(48px + 70px)}
 
 /* Tarjetas que se levantan */
 .svc-group,.plan,.role,.problem-item,.step,.example{transition:transform .25s ease, box-shadow .25s ease}
-.svc-group:hover,.plan:hover,.role:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(11,60,56,.35)}
+.svc-group:hover,.plan:hover,.role:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(60,40,28,.3)}
 .svc-list li svg{transition:transform .3s}
 .svc-list li:hover svg{transform:scale(1.2) rotate(-6deg)}
 
@@ -350,7 +350,7 @@ footer{padding-bottom:calc(48px + 70px)}
 .js .rv.in{opacity:1;transform:none}
 
 /* Barra de oferta */
-.promo{display:block;text-decoration:none;background:linear-gradient(90deg,var(--accent),#0E9488,var(--accent));background-size:200% auto;animation:shine 8s linear infinite;color:#fff;font-size:14px;text-align:center}
+.promo{display:block;text-decoration:none;background:linear-gradient(90deg,var(--accent),#8F6748,var(--accent));background-size:200% auto;animation:shine 8s linear infinite;color:#fff;font-size:14px;text-align:center}
 .promo-in{display:block;padding:9px max(16px, env(safe-area-inset-left,0px))}
 .promo-cta{font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 .offer-pill{display:inline-flex;align-items:center;gap:10px;justify-self:start;max-width:100%;font-size:15px;padding:10px 16px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
