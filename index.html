@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="ABBA Business Lab">
+<meta property="og:description" content="Páginas web con automatizaciones para centros de estética y clínicas.">
+<title>ABBA Business Lab</title>
+<meta name="description" content="ABBA Business Lab crea páginas web con automatizaciones para centros de estética y clínicas: reservas online, recordatorios, fichas de clientes y pagos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: un laboratorio limpio. Columna editorial a la izquierda, "pruebas" vivas (web + registro de automatizaciones) a la derecha. */
+:root{
+  --bg:#F2F4F3;
+  --surface:#FFFFFF;
+  --ink:#121A22;
+  --muted:#56626C;
+  --line:#D9DFE2;
+  --accent:#2944D6;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#E3E8FB;
+  --blush:#F3DDD6;
+  --blush-ink:#7A3E2E;
+  --ok:#1E7A4F;
+  --ok-soft:#DDF1E6;
+  --f-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
+    --accent:#7D93FF; --accent-ink:#0B1020; --accent-soft:#1D2547;
+    --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
+  --accent:#7D93FF; --accent-ink:#0B1020; --accent-soft:#1D2547;
+  --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+section{padding-block:88px}
+.label{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5.6vw,64px);letter-spacing:-.02em}
+h2{font-size:clamp(26px,3.6vw,40px);letter-spacing:-.015em}
+h3{font-family:var(--f-body);font-size:19px;font-weight:700;line-height:1.3}
+p{margin:0}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:56ch}
+.sec-head{display:grid;gap:14px;max-width:720px;margin-bottom:48px}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 16px/1 var(--f-body);padding:16px 22px;border-radius:999px;text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s ease, background .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{border-color:var(--line);color:var(--ink);background:transparent}
+.btn-ghost:hover{border-color:var(--ink)}
+
+/* Cabecera */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 13px/1 var(--f-display);letter-spacing:-.02em}
+.brand-name{font:700 15px/1.1 var(--f-display);letter-spacing:-.01em}
+.brand-name small{display:block;font:500 11px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.nav-links{display:flex;gap:26px;font-size:15px;font-weight:500}
+.nav-links a{text-decoration:none;color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+.nav .btn{padding:12px 18px;font-size:15px}
+@media (max-width:860px){.nav-links{display:none}}
+
+/* Hero */
+.hero{padding-block:64px 80px}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero-copy{display:grid;gap:26px;min-width:0}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.hero-facts{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14.5px;color:var(--muted)}
+.hero-facts span::before{content:"✓";color:var(--ok);font-weight:700;margin-right:7px}
+@media (max-width:920px){.hero-grid{grid-template-columns:1fr;gap:44px}}
+
+/* Prueba visual: web de clínica + registro */
+.demo{position:relative;min-width:0}
+.demo-tag{position:absolute;top:-12px;left:18px;z-index:2;font:500 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:7px 10px;border-radius:6px}
+.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(18,26,34,.35)}
+.browser-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.browser-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.browser-bar .url{margin-left:10px;flex:1;min-width:0;font:400 12.5px/1 var(--f-mono);color:var(--muted);background:var(--bg);padding:7px 10px;border-radius:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.site{padding:22px;display:grid;gap:16px;background:linear-gradient(180deg,var(--blush) 0,var(--surface) 62%)}
+.site-top{display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--blush-ink);font-size:14px}
+.site-top span:last-child{font-weight:500;font-size:12.5px}
+.site h4{margin:0;font:700 22px/1.15 var(--f-display);color:var(--ink);max-width:16ch}
+.booking{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px}
+.booking-row{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.booking-row b{font-weight:600}
+.slots{display:flex;flex-wrap:wrap;gap:6px}
+.slots span{font:500 12.5px/1 var(--f-mono);padding:8px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
+.slots span.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.booking .btn{justify-content:center;padding:12px;font-size:14px}
+
+.log{margin:-26px 0 0 auto;width:min(330px,92%);position:relative;background:var(--ink);color:var(--bg);border-radius:14px;padding:16px 16px 12px;font-family:var(--f-mono);font-size:12.5px;line-height:1.5;box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
+.log-title{display:flex;justify-content:space-between;opacity:.65;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.log ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.log li{display:grid;grid-template-columns:44px 1fr;gap:8px;font-variant-numeric:tabular-nums}
+.log li time{opacity:.55}
+.log li.new{animation:pop .5s ease both}
+@keyframes pop{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5BD49A;margin-right:6px;vertical-align:1px}
+
+/* Problema */
+.problem{background:var(--surface);border-block:1px solid var(--line)}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.problem-item{display:grid;gap:10px;align-content:start}
+.problem-item .big{font:700 15px/1 var(--f-mono);color:var(--blush-ink);background:var(--blush);display:inline-block;width:max-content;padding:7px 10px;border-radius:7px}
+.problem-item p{color:var(--muted)}
+@media (max-width:820px){.problem-grid{grid-template-columns:1fr;gap:28px}}
+
+/* Servicios */
+.services{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.svc-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:30px;display:grid;gap:20px;align-content:start}
+.svc-group header{display:grid;gap:8px}
+.svc-list{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.svc-list li{display:grid;grid-template-columns:28px 1fr;gap:12px}
+.svc-list svg{width:22px;height:22px;color:var(--accent);margin-top:3px}
+.svc-list b{display:block;font-weight:600}
+.svc-list span{color:var(--muted);font-size:15.5px}
+.svc-group.auto{background:var(--accent-soft);border-color:transparent}
+@media (max-width:820px){.services{grid-template-columns:1fr}}
+
+.sectors{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.sectors span{font-size:15px;font-weight:500;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+.sectors span.main{background:var(--blush);border-color:transparent;color:var(--blush-ink);font-weight:600}
+
+/* Caso real */
+.case{background:var(--ink);color:var(--bg)}
+.case .label{color:#9FB0FF}
+.case .lead{color:color-mix(in srgb, var(--bg) 72%, transparent)}
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.case-list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid color-mix(in srgb, var(--bg) 18%, transparent)}
+.case-list li{display:grid;grid-template-columns:1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid color-mix(in srgb, var(--bg) 18%, transparent)}
+.case-list b{display:block;font-weight:600}
+.case-list span{font-size:15px;color:color-mix(in srgb, var(--bg) 65%, transparent)}
+.case-list em{font:500 11.5px/1 var(--f-mono);font-style:normal;letter-spacing:.06em;text-transform:uppercase;align-self:center;padding:6px 8px;border-radius:6px;background:color-mix(in srgb, var(--bg) 12%, transparent);white-space:nowrap}
+.case .btn-ghost{color:var(--bg);border-color:color-mix(in srgb, var(--bg) 30%, transparent)}
+.case .btn-ghost:hover{border-color:var(--bg)}
+.case-copy{display:grid;gap:22px}
+@media (max-width:860px){.case-grid{grid-template-columns:1fr;gap:36px}}
+
+/* Proceso */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s}
+.step{display:grid;gap:12px;align-content:start;padding-top:18px;border-top:2px solid var(--ink)}
+.step .n{font:500 13px/1 var(--f-mono);color:var(--accent)}
+.step p{color:var(--muted);font-size:15.5px}
+.step .free{font:600 12px/1 var(--f-mono);color:var(--ok);background:var(--ok-soft);padding:6px 8px;border-radius:6px;width:max-content}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr;gap:32px 20px}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* Planes */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;display:flex;flex-direction:column;gap:18px}
+.plan.featured{border:2px solid var(--accent)}
+.plan-top{display:grid;gap:6px}
+.plan-top .tag{font:500 11.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.plan-price{font:700 22px/1.1 var(--f-display)}
+.plan-price small{display:block;font:400 13.5px/1.4 var(--f-body);color:var(--muted);margin-top:6px}
+.plan ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;font-size:15.5px;flex:1}
+.plan li{display:grid;grid-template-columns:20px 1fr;gap:8px}
+.plan li::before{content:"✓";color:var(--ok);font-weight:700}
+.plan .btn{justify-content:center}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* Equipo */
+.team{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start}
+.team-roles{display:grid;gap:14px}
+.role{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.role .ico{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.role .ico svg{width:22px;height:22px}
+.role p{color:var(--muted);font-size:15.5px}
+@media (max-width:860px){.team{grid-template-columns:1fr;gap:32px}}
+
+/* FAQ */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 22px}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:18px 0;font-weight:600}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:500 20px/1 var(--f-mono);color:var(--accent);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);padding-bottom:18px;max-width:65ch}
+
+/* Contacto */
+.contact{background:var(--surface);border-top:1px solid var(--line)}
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start}
+.contact-aside{display:grid;gap:22px}
+.contact-aside ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;color:var(--muted)}
+.contact-aside li{display:grid;grid-template-columns:22px 1fr;gap:10px}
+.contact-aside li::before{content:"→";color:var(--accent);font-weight:700}
+.direct{display:grid;gap:8px;padding:18px;border:1px dashed var(--line);border-radius:12px;font-size:15px}
+.direct code{font-family:var(--f-mono);font-size:14px;color:var(--ink)}
+form{display:grid;gap:18px;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:28px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:600px){.row2{grid-template-columns:1fr}}
+.field{display:grid;gap:7px;min-width:0}
+.field label,.field legend{font-size:14px;font-weight:600}
+.field .hint{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],input[type=url],select,textarea{width:100%;font:400 16px/1.4 var(--f-body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chip span{display:inline-block;font-size:14.5px;font-weight:500;padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;user-select:none}
+.chip input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.consent{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:14px;color:var(--muted);align-items:start}
+.consent input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}
+.err{color:#C0392B;font-size:13.5px;font-weight:500}
+.field.invalid input,.field.invalid select{border-color:#C0392B}
+form .btn{justify-content:center;width:100%}
+.success{display:grid;gap:14px;background:var(--ok-soft);border:1px solid transparent;border-radius:18px;padding:32px}
+.success h3{font-family:var(--f-display);font-size:24px;color:var(--ok)}
+.success .note{font:400 12.5px/1.5 var(--f-mono);color:var(--muted)}
+@media (max-width:900px){.contact-grid{grid-template-columns:1fr;gap:36px}}
+
+/* Pie */
+footer{padding-block:48px;border-top:1px solid var(--line)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;font-size:15px}
+.foot h4{margin:0 0 12px;font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none;color:var(--ink)}
+.foot a:hover{color:var(--accent)}
+.foot p{color:var(--muted);max-width:40ch;margin-top:12px}
+.legal{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--muted)}
+.legal a{color:var(--muted)}
+@media (max-width:760px){.foot{grid-template-columns:1fr}}
+
+/* Calculadora */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.calc-box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;display:grid;gap:22px}
+.calc-field{display:grid;gap:10px}
+.calc-field label{display:flex;justify-content:space-between;gap:12px;font-size:15px;font-weight:600}
+.calc-field output{font:500 14px/1.4 var(--f-mono);color:var(--accent);white-space:nowrap;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.calc-result{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:18px;border-top:1px solid var(--line)}
+.calc-result>div{display:grid;gap:4px;background:var(--blush);border-radius:12px;padding:16px}
+.calc-num{font:700 clamp(26px,3.4vw,34px)/1 var(--f-display);color:var(--blush-ink);font-variant-numeric:tabular-nums}
+.calc-cap{font-size:14px;color:var(--blush-ink)}
+.calc-note{font-size:14.5px;color:var(--muted)}
+@media (max-width:860px){.calc{grid-template-columns:1fr;gap:32px}}
+
+/* Análisis gratis */
+.audit{background:var(--accent);color:var(--accent-ink)}
+.audit .label{color:var(--accent-ink);opacity:.8}
+.audit .lead{color:var(--accent-ink);opacity:.85}
+.audit-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.audit-copy{display:grid;gap:16px}
+.audit-form{background:var(--surface);color:var(--ink);border:0}
+.audit .success{color:var(--ink)}
+@media (max-width:860px){.audit-grid{grid-template-columns:1fr;gap:28px}}
+
+/* Ejemplo */
+.example{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;text-decoration:none;background:var(--blush);border-radius:22px;padding:40px;transition:transform .2s}
+.example:hover{transform:translateY(-2px)}
+.example-copy{display:grid;gap:16px;min-width:0}
+.example-copy h2{color:var(--ink)}
+.example-copy .btn{width:max-content}
+.example-shot{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(18,26,34,.45);min-width:0}
+.ex-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);font:400 12px/1 var(--f-mono);color:var(--muted)}
+.ex-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.ex-bar span{margin-left:8px}
+.ex-body{display:grid;gap:14px;padding:28px 24px 30px;background:linear-gradient(160deg,#EFE4DA,#F8F3EE)}
+.ex-brand{font:600 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A5A48}
+.ex-h{font:400 30px/1.1 Georgia,"Times New Roman",serif;color:#2A211C;max-width:12ch}
+.ex-chips{display:flex;gap:6px;flex-wrap:wrap}
+.ex-chips b{font:500 12px/1 var(--f-body);padding:7px 10px;border-radius:999px;background:#fff;color:#4A3A30}
+.ex-btn{width:max-content;font:600 13px/1 var(--f-body);padding:11px 16px;border-radius:999px;background:#2A211C;color:#F8F3EE}
+@media (max-width:860px){.example{grid-template-columns:1fr;padding:22px;gap:28px}}
+
+/* Formulario corto */
+.plan-chosen{font-size:14px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:10px}
+.form-foot{font-size:13.5px;color:var(--muted);text-align:center}
+
+/* WhatsApp flotante */
+.wa{position:fixed;z-index:30;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px;background:#1FA855;color:#fff;text-decoration:none;font:600 15px/1 var(--f-body);padding:13px 18px 13px 14px;border-radius:999px;box-shadow:0 14px 30px -10px rgba(0,0,0,.4);transition:transform .15s}
+.wa:hover{transform:translateY(-2px)}
+@media (max-width:520px){.wa span{display:none}.wa{padding:14px}}
+
+/* Legal */
+.legal-docs{margin-top:36px;display:grid;gap:8px}
+.legal-docs details{border:1px solid var(--line);border-radius:10px;padding:0 16px;background:var(--surface)}
+.legal-docs summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:14.5px}
+.legal-docs p{font-size:14px;color:var(--muted);padding-bottom:12px;max-width:80ch}
+footer{padding-bottom:calc(48px + 70px)}
+</style>
+
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="#inicio" aria-label="ABBA Business Lab, inicio">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" width="22" height="22" fill="none" aria-hidden="true"><path d="M12 4h8M13.5 4v8.2L6.6 24.4A2.4 2.4 0 0 0 8.7 28h14.6a2.4 2.4 0 0 0 2.1-3.6L18.5 12.2V4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.6 20.5c2.2-1.3 4.3-1.3 6.4 0s4.2 1.3 6.4 0l2 3.6c.6 1.1-.2 2.4-1.4 2.4H9c-1.2 0-2-1.3-1.4-2.4z" fill="var(--accent)"/><circle cx="17.5" cy="16" r="1.3" fill="var(--accent)"/></svg></span>
+      <span class="brand-name">ABBA<small>Business Lab</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#servicios">Servicios</a>
+      <a href="demo-estetica.html">Ejemplo</a>
+      <a href="#caso">Caso real</a>
+      <a href="#proceso">Cómo trabajamos</a>
+      <a href="#planes">Planes</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <a class="btn btn-primary" href="#contacto">Pide tu maqueta gratis</a>
+  </div>
+</header>
+
+<main id="inicio">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="label">Webs para centros de estética y clínicas</span>
+        <h1>Una web que <em>reserva citas</em> mientras tú atiendes.</h1>
+        <p class="lead">En ABBA Business Lab creamos páginas web con automatizaciones dentro: reservas online, recordatorios a tus clientes, fichas de clientes y cobro de señales. Si tu centro no tiene web o la que tienes no te trae clientes, te hacemos una nueva.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#contacto">Quiero mi maqueta gratis
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="demo-estetica.html">Ver web de ejemplo</a>
+        </div>
+        <div class="hero-facts">
+          <span>Maqueta de tu web antes de pagar nada</span>
+          <span>Hecha con los datos de tu ficha de Google</span>
+          <span>Toda España</span>
+        </div>
+      </div>
+
+      <div class="demo" aria-label="Ejemplo de web de un centro de estética con reservas automáticas">
+        <span class="demo-tag">Ejemplo</span>
+        <div class="browser">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">tucentro.es/reservar</span></div>
+          <div class="site">
+            <div class="site-top"><span>Centro Lumière</span><span>Tratamientos · Equipo · Contacto</span></div>
+            <h4>Reserva tu tratamiento en 30 segundos</h4>
+            <div class="booking">
+              <div class="booking-row"><span>Tratamiento</span><b>Limpieza facial profunda</b></div>
+              <div class="booking-row"><span>Jueves 12</span><b>60 min</b></div>
+              <div class="slots" aria-hidden="true">
+                <span>10:00</span><span class="on">11:30</span><span>13:00</span><span>17:30</span><span>19:00</span>
+              </div>
+              <span class="btn btn-primary">Confirmar cita</span>
+            </div>
+          </div>
+        </div>
+        <div class="log" aria-label="Registro de automatizaciones de ejemplo">
+          <div class="log-title"><span><span class="dot"></span>Automatizaciones</span><span>hoy</span></div>
+          <ol id="log">
+            <li><time>09:14</time><span>Cita reservada · Limpieza facial</span></li>
+            <li><time>09:14</time><span>Ficha de clienta creada</span></li>
+            <li><time>09:15</time><span>WhatsApp de confirmación listo</span></li>
+            <li><time>20:00</time><span>Recordatorio 24 h antes</span></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="problem">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">El problema</span>
+        <h2>Tus clientas te buscan en Google antes de llamarte.</h2>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-item">
+          <span class="big">Sin web</span>
+          <h3>Si no te encuentran, reservan en otro sitio</h3>
+          <p>Muchos centros solo tienen una ficha de Google o un perfil de Instagram. Quien compara tratamientos acaba en el centro que le explica mejor qué hace y cuánto cuesta.</p>
+        </div>
+        <div class="problem-item">
+          <span class="big">Web antigua</span>
+          <h3>Lenta, sin precios y mal en el móvil</h3>
+          <p>Una web que tarda en cargar o no se ve bien en el teléfono transmite poco cuidado, justo en un sector donde la imagen lo es todo.</p>
+        </div>
+        <div class="problem-item">
+          <span class="big">Todo a mano</span>
+          <h3>Citas por teléfono y olvidos</h3>
+          <p>Contestar llamadas en mitad de un tratamiento, apuntar citas en papel y perseguir a quien no viene te quita horas cada semana.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULADORA -->
+  <section id="calculadora">
+    <div class="wrap calc">
+      <div class="sec-head" style="margin:0">
+        <span class="label">Haz la cuenta</span>
+        <h2>¿Cuántas citas se te escapan cada mes?</h2>
+        <p class="lead">Mueve los valores según tu centro. Es una estimación orientativa de lo que se pierde por no poder coger el teléfono, no una promesa de resultados.</p>
+      </div>
+      <div class="calc-box">
+        <div class="calc-field">
+          <label for="c-calls">Llamadas o mensajes sin contestar a la semana <output id="o-calls">8</output></label>
+          <input id="c-calls" type="range" min="1" max="40" value="8">
+        </div>
+        <div class="calc-field">
+          <label for="c-rate">De ellas, cuántas habrían reservado <output id="o-rate">40 %</output></label>
+          <input id="c-rate" type="range" min="10" max="80" step="5" value="40">
+        </div>
+        <div class="calc-field">
+          <label for="c-price">Precio medio de un tratamiento <output id="o-price">45 €</output></label>
+          <input id="c-price" type="range" min="15" max="250" step="5" value="45">
+        </div>
+        <div class="calc-result" aria-live="polite">
+          <div><span class="calc-num" id="r-appts">14</span><span class="calc-cap">citas al mes</span></div>
+          <div><span class="calc-num" id="r-money">630 €</span><span class="calc-cap">al mes en tratamientos</span></div>
+        </div>
+        <p class="calc-note">Con reservas online 24 h, tus clientas pueden reservar aunque estés en cabina.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANÁLISIS GRATIS -->
+  <section class="audit" id="analisis">
+    <div class="wrap audit-grid">
+      <div class="audit-copy">
+        <span class="label">Gratis</span>
+        <h2>¿Tu web te trae clientas? Te la analizamos.</h2>
+        <p class="lead">Déjanos tu web o tu ficha de Google y te enviamos por WhatsApp 4 mejoras concretas: velocidad, móvil, reservas y cómo apareces en Google.</p>
+      </div>
+      <form id="audit-form" class="audit-form" name="analisis" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="analisis"><p hidden><label>No rellenar <input name="bot-field"></label></p>
+        <div class="field"><label for="a-web">Tu web o el nombre de tu centro en Google</label><input id="a-web" name="web_o_ficha" type="text" placeholder="tucentro.es o «Centro X, Madrid»" required><span class="err" hidden>Escribe tu web o el nombre de tu centro.</span></div>
+        <div class="field"><label for="a-phone">Tu WhatsApp</label><input id="a-phone" name="whatsapp" type="tel" autocomplete="tel" placeholder="600 000 000" required><span class="err" hidden>Escribe un teléfono válido.</span></div>
+        <button class="btn btn-primary" type="submit">Quiero mi análisis gratis</button>
+        <span class="err send-err" hidden>No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.</span>
+      </form>
+      <div class="success" id="audit-ok" hidden role="status" aria-live="polite">
+        <h3>¡Apuntado!</h3>
+        <p>Te enviamos el análisis por WhatsApp en menos de 48 horas laborables.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Qué hacemos</span>
+        <h2>La web y el trabajo que hay detrás de ella.</h2>
+        <p class="lead">Cada web lleva dos partes: lo que ve tu clienta y lo que se hace solo para que tú no tengas que hacerlo.</p>
+      </div>
+      <div class="services">
+        <div class="svc-group">
+          <header><span class="label">Lo que ve tu clienta</span><h3>Tu página web</h3></header>
+          <ul class="svc-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><div><b>Diseño moderno, pensado para el móvil</b><span>La mayoría de tus clientas te verán desde el teléfono.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><div><b>Tratamientos y precios claros</b><span>Cada servicio con su descripción, duración y precio.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.6 5.8 21l1.4-7L2 9.3l7-.8z"/></svg><div><b>Tus reseñas de Google en la web</b><span>Lo que ya dicen de ti, a la vista de quien te visita.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><div><b>Preparada para aparecer en Google</b><span>SEO local para que te encuentren en tu zona.</span></div></li>
+          </ul>
+        </div>
+        <div class="svc-group auto">
+          <header><span class="label">Lo que se hace solo</span><h3>Automatizaciones</h3></header>
+          <ul class="svc-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><div><b>Reservas online 24 h</b><span>Tus clientas eligen tratamiento, día y hora sin llamarte.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-5A8 8 0 1 1 21 12z"/></svg><div><b>Confirmaciones y recordatorios</b><span>Avisos antes de cada cita para reducir las ausencias.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><div><b>Ficha de cada clienta</b><span>Historial de citas y tratamientos, en un área privada solo para ti.</span></div></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg><div><b>Cobro de señales y pagos</b><span>Pago online seguro al reservar, si lo quieres.</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sectors" aria-label="Sectores con los que trabajamos">
+        <span class="main">Centros de estética</span>
+        <span class="main">Clínicas</span>
+        <span>Medicina estética</span><span>Dental</span><span>Fisioterapia</span><span>Podología</span><span>Psicología</span><span>Peluquería y barbería</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJEMPLO DEL SECTOR -->
+  <section id="ejemplo" style="padding-top:0">
+    <div class="wrap">
+      <a class="example" href="demo-estetica.html">
+        <div class="example-shot" aria-hidden="true">
+          <div class="ex-bar"><i></i><i></i><i></i><span>nacarestudio.es</span></div>
+          <div class="ex-body">
+            <span class="ex-brand">Nácar · Estudio de estética</span>
+            <span class="ex-h">Tu piel, en buenas manos.</span>
+            <span class="ex-chips"><b>Facial</b><b>Corporal</b><b>Láser</b></span>
+            <span class="ex-btn">Reservar cita</span>
+          </div>
+        </div>
+        <div class="example-copy">
+          <span class="label">Web de ejemplo</span>
+          <h2>Así quedaría la web de tu centro.</h2>
+          <p class="lead">Hemos creado la web completa de un centro de estética ficticio: tratamientos con precios, reserva de citas paso a paso, opiniones, equipo y horario. Pruébala como si fueras una clienta.</p>
+          <span class="btn btn-primary">Abrir la web de ejemplo →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- CASO REAL -->
+  <section class="case" id="caso">
+    <div class="wrap case-grid">
+      <div class="case-copy">
+        <span class="label">Caso real</span>
+        <h2>Aiman Motors: web y automatizaciones hechas en casa.</h2>
+        <p class="lead">Aiman Motors gestiona coches de particulares en Madrid y Marbella. Su web es nuestro laboratorio: la diseñamos, la mantenemos y la vamos mejorando por fases con el mismo sistema que aplicamos a cada cliente.</p>
+        <div><a class="btn btn-ghost" href="https://aimanmotors.com" target="_blank" rel="noopener">Visitar aimanmotors.com ↗</a></div>
+      </div>
+      <ul class="case-list">
+        <li><div><b>Simulador de ingresos</b><span>El visitante calcula cuánto podría ganar antes de contactar.</span></div><em>Herramienta</em></li>
+        <li><div><b>Área privada de clientes</b><span>Registro y seguimiento de cada solicitud.</span></div><em>Automatización</em></li>
+        <li><div><b>Reseñas de Google integradas</b><span>Las opiniones reales, visibles en la propia web.</span></div><em>Confianza</em></li>
+        <li><div><b>Formularios de solicitud</b><span>Cada contacto llega ordenado y con sus datos.</span></div><em>Captación</em></li>
+        <li><div><b>Mejoras continuas</b><span>Cambios publicados en cuanto se deciden.</span></div><em>Mantenimiento</em></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROCESO -->
+  <section id="proceso">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Cómo trabajamos</span>
+        <h2>Ves tu web antes de decidir nada.</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="n">Paso 1</span><h3>Estudiamos tu negocio</h3><p>Partimos de tu ficha de Google, tus redes y tu web actual, si la tienes. Hablamos contigo 15 minutos.</p></div>
+        <div class="step"><span class="n">Paso 2</span><h3>Te enseñamos tu maqueta</h3><p>Una web de prueba navegable, con tu nombre, tus servicios y tus fotos.</p><span class="free">Gratis y sin compromiso</span></div>
+        <div class="step"><span class="n">Paso 3</span><h3>La terminamos contigo</h3><p>Ajustamos textos y diseño, y conectamos reservas, recordatorios y pagos.</p></div>
+        <div class="step"><span class="n">Paso 4</span><h3>Publicamos y cuidamos</h3><p>Tu web en tu dominio, con mantenimiento y cambios cuando los necesites.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANES -->
+  <section id="planes" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Planes</span>
+        <h2>Empieza por lo que necesitas hoy.</h2>
+        <p class="lead">Precios de partida, IVA no incluido. Te damos un precio cerrado después de ver tu maqueta.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <div class="plan-top"><span class="tag">Presencia</span><h3>Web básica</h3></div>
+          <div class="plan-price">Desde 390 €<small>Pago único. Para centros que aún no tienen web.</small></div>
+          <ul><li>Web de una página</li><li>Tratamientos y precios</li><li>Botón de WhatsApp y llamada</li><li>Mapa, horario y reseñas</li></ul>
+          <a class="btn btn-ghost" href="#contacto" data-plan="Web básica">Pedir maqueta</a>
+        </div>
+        <div class="plan featured">
+          <div class="plan-top"><span class="tag">El más pedido</span><h3>Web con reservas</h3></div>
+          <div class="plan-price">Desde 790 €<small>Pago único. Para llenar la agenda sin coger el teléfono.</small></div>
+          <ul><li>Todo lo de Web básica</li><li>Varias páginas y galería</li><li>Reservas online 24 h</li><li>Confirmaciones y recordatorios</li><li>SEO local</li></ul>
+          <a class="btn btn-primary" href="#contacto" data-plan="Web con reservas">Pedir maqueta</a>
+        </div>
+        <div class="plan">
+          <div class="plan-top"><span class="tag">Gestión completa</span><h3>Web + automatización</h3></div>
+          <div class="plan-price">Desde 1.290 €<small>+ 49 €/mes de mantenimiento. Para delegar toda la parte digital.</small></div>
+          <ul><li>Todo lo de Web con reservas</li><li>Fichas de clientas y área privada</li><li>Cobro de señales online</li><li>Mantenimiento mensual</li><li>Mejoras continuas</li></ul>
+          <a class="btn btn-ghost" href="#contacto" data-plan="Web + automatización">Pedir maqueta</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPO -->
+  <section style="padding-top:0">
+    <div class="wrap team">
+      <div class="sec-head" style="margin:0">
+        <span class="label">Quiénes somos</span>
+        <h2>Un equipo pequeño con un laboratorio detrás.</h2>
+        <p class="lead">Combinamos visión de negocio, diseño web y gestión. Trabajamos con inteligencia artificial para hacer en días lo que antes llevaba semanas, y siempre hablas con una persona.</p>
+      </div>
+      <div class="team-roles">
+        <div class="role"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span><div><h3>Negocio</h3><p>Entendemos cómo vende tu centro antes de diseñar nada. La web tiene que traer clientes, no solo quedar bonita.</p></div></div>
+        <div class="role"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg></span><div><h3>Web y automatización</h3><p>Diseño, desarrollo y las automatizaciones que conectan tu web con tu agenda.</p></div></div>
+        <div class="role"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span><div><h3>Gestión</h3><p>Seguimiento de cada proyecto, plazos claros y un único contacto para todo.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="label">Preguntas frecuentes</span><h2>Lo que nos suelen preguntar.</h2></div>
+      <div class="faq">
+        <details open><summary>¿De verdad la maqueta es gratis?</summary><p>Sí. Te preparamos una web de prueba con los datos de tu negocio para que veas cómo quedaría. Si no te convence, no pagas nada.</p></details>
+        <details><summary>¿Cuánto tardáis en tenerla lista?</summary><p>La maqueta, en pocos días. La web terminada depende de las automatizaciones que elijas y de lo rápido que tengamos tus textos y fotos.</p></details>
+        <details><summary>No tengo fotos profesionales. ¿Es un problema?</summary><p>No. Empezamos con las fotos de tu ficha de Google y tus redes, y te decimos qué fotos merece la pena hacer para que la web luzca más.</p></details>
+        <details><summary>¿Necesito saber de tecnología?</summary><p>No. Nos encargamos del diseño, el dominio, la publicación y las automatizaciones. Tú solo nos dices qué quieres cambiar.</p></details>
+        <details><summary>¿Qué pasa con los datos de mis clientas?</summary><p>Los formularios y las fichas se preparan conforme a la normativa de protección de datos. En clínicas con datos de salud, te recomendamos revisarlo con tu asesor.</p></details>
+        <details><summary>¿Trabajáis fuera de mi ciudad?</summary><p>Sí, trabajamos en remoto con centros de toda España.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact" id="contacto">
+    <div class="wrap contact-grid">
+      <div class="contact-aside">
+        <span class="label">Contacto</span>
+        <h2>¿Vemos cómo quedaría tu web?</h2>
+        <p class="lead">Cuéntanos un poco de tu centro y te preparamos la maqueta.</p>
+        <ul>
+          <li>Te respondemos en menos de 24 horas laborables.</li>
+          <li>Sin compromiso: primero ves la maqueta, luego decides.</li>
+          <li>Si ya tienes web, te decimos qué mejoraríamos.</li>
+        </ul>
+        <div class="direct">
+          <span>¿Prefieres escribirnos directamente?</span>
+          <span>WhatsApp: <code>[tu teléfono]</code></span>
+          <span>Email: <code>[tu email]</code></span>
+        </div>
+      </div>
+
+      <div>
+        <form id="lead-form" name="maqueta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="maqueta"><p hidden><label>No rellenar <input name="bot-field"></label></p>
+          <div class="row2">
+            <div class="field"><label for="f-name">Tu nombre</label><input id="f-name" name="nombre" type="text" autocomplete="name" placeholder="Ej.: Laura Gómez" required><span class="err" hidden>Escribe tu nombre.</span></div>
+            <div class="field"><label for="f-biz">Nombre del centro</label><input id="f-biz" name="negocio" type="text" autocomplete="organization" placeholder="Ej.: Centro Lumen, Madrid" required><span class="err" hidden>Escribe el nombre de tu centro.</span></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="f-phone">Teléfono o WhatsApp</label><input id="f-phone" name="telefono" type="tel" autocomplete="tel" placeholder="600 000 000" required><span class="err" hidden>Escribe un teléfono válido.</span></div>
+            <div class="field"><label for="f-hasweb">¿Tienes web?</label>
+              <select id="f-hasweb" name="tiene_web" required>
+                <option value="">Elige una opción</option>
+                <option>No, quiero una</option>
+                <option>Sí, pero quiero mejorarla</option>
+              </select><span class="err" hidden>Elige una opción.</span></div>
+          </div>
+          <input type="hidden" id="f-plan" name="plan" value="">
+          <p class="plan-chosen" id="plan-chosen" hidden></p>
+          <div class="field">
+            <label class="consent"><input id="f-ok" name="acepta_privacidad" value="si" type="checkbox" required><span>Acepto que ABBA Business Lab use estos datos para contactarme sobre mi solicitud, según la <a href="#legal">política de privacidad</a>.</span></label>
+            <span class="err" hidden>Necesitamos tu permiso para contactarte.</span>
+          </div>
+          <button class="btn btn-primary" type="submit">Pedir mi maqueta gratis</button>
+          <span class="err send-err" hidden>No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.</span>
+          <p class="form-foot">Solo 4 datos. El resto lo hablamos por teléfono.</p>
+        </form>
+
+        <div class="success" id="success" hidden role="status" aria-live="polite">
+          <h3 id="success-title">¡Gracias!</h3>
+          <p id="success-text">Hemos recibido los datos de tu centro. Te escribimos en menos de 24 horas laborables para enseñarte tu maqueta.</p>
+          <button class="btn btn-ghost" type="button" id="again">Enviar otra solicitud</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="wa" id="wa" href="#contacto" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+  <span>WhatsApp</span>
+</a>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#inicio"><span class="brand-mark"><svg viewBox="0 0 32 32" width="22" height="22" fill="none" aria-hidden="true"><path d="M12 4h8M13.5 4v8.2L6.6 24.4A2.4 2.4 0 0 0 8.7 28h14.6a2.4 2.4 0 0 0 2.1-3.6L18.5 12.2V4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.6 20.5c2.2-1.3 4.3-1.3 6.4 0s4.2 1.3 6.4 0l2 3.6c.6 1.1-.2 2.4-1.4 2.4H9c-1.2 0-2-1.3-1.4-2.4z" fill="var(--accent)"/><circle cx="17.5" cy="16" r="1.3" fill="var(--accent)"/></svg></span><span class="brand-name">ABBA<small>Business Lab</small></span></a>
+        <p>Páginas web con automatizaciones para centros de estética y clínicas de toda España.</p>
+      </div>
+      <div><h4>Secciones</h4><ul><li><a href="#servicios">Servicios</a></li><li><a href="#caso">Caso real</a></li><li><a href="#proceso">Cómo trabajamos</a></li><li><a href="#planes">Planes</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
+      <div><h4>Contacto</h4><ul><li>WhatsApp: [tu teléfono]</li><li>Email: [tu email]</li><li>Instagram: [@tuperfil]</li><li><a href="#legal">Aviso legal y privacidad</a></li></ul></div>
+    </div>
+    <div class="legal-docs" id="legal">
+      <details><summary>Aviso legal</summary>
+        <p>Titular del sitio: Aiman Abzaid, NIF [tu NIF], con domicilio en Madrid. Nombre comercial: ABBA Business Lab. Contacto: [tu email].</p>
+        <p>Los contenidos de esta web son propiedad de su titular. La web de demostración «Nácar» es un centro ficticio creado como ejemplo de nuestro trabajo.</p>
+      </details>
+      <details><summary>Política de privacidad</summary>
+        <p>Responsable: Aiman Abzaid (ABBA Business Lab). Finalidad: atender tu solicitud de maqueta, análisis o presupuesto y contactarte sobre ella. Legitimación: tu consentimiento. Conservación: mientras dure la relación o hasta que pidas su borrado. No cedemos tus datos a terceros salvo obligación legal o proveedores necesarios para prestar el servicio (alojamiento web y correo).</p>
+        <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a [tu email]. También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+      </details>
+      <details><summary>Cookies</summary>
+        <p>Esta web solo usa las cookies técnicas imprescindibles para funcionar. Si en el futuro añadimos analítica, te pediremos permiso antes.</p>
+      </details>
+    </div>
+    <div class="legal">
+      <span>© 2026 ABBA Business Lab</span>
+      <span><a href="#legal">Aviso legal</a> · <a href="#legal">Privacidad</a> · <a href="#legal">Cookies</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Pon aquí tu número con prefijo, sin espacios ni +. Ej.: '34600000000'
+  var WHATSAPP = '';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Botón flotante de WhatsApp
+  var wa=document.getElementById('wa');
+  if(wa && WHATSAPP){ wa.href='https://wa.me/'+WHATSAPP+'?text='+encodeURIComponent('Hola, me interesa una web para mi centro.'); wa.target='_blank'; wa.rel='noopener'; }
+
+  // Planes -> recordar el plan elegido en el formulario
+  document.querySelectorAll('[data-plan]').forEach(function(a){
+    a.addEventListener('click', function(){
+      var plan=a.getAttribute('data-plan');
+      document.getElementById('f-plan').value=plan;
+      var t=document.getElementById('plan-chosen'); t.textContent='Plan elegido: '+plan; t.hidden=false;
+    });
+  });
+
+  // Registro de automatizaciones de ejemplo
+  var log=document.getElementById('log');
+  var events=[['10:02','Señal de 10 € cobrada'],['10:40','Nueva reseña de Google'],['11:31','Cita reservada · Láser diodo'],['11:31','Ficha de clienta actualizada'],['12:05','Hueco liberado y ofrecido'],['09:14','Cita reservada · Limpieza facial']];
+  var i=0;
+  if(log && !reduce){
+    setInterval(function(){
+      var e=events[i++%events.length], li=document.createElement('li');
+      li.className='new'; li.innerHTML='<time></time><span></span>';
+      li.firstChild.textContent=e[0]; li.lastChild.textContent=e[1];
+      log.appendChild(li);
+      while(log.children.length>4) log.removeChild(log.firstElementChild);
+    },3200);
+  }
+
+  // Calculadora
+  var fmt=new Intl.NumberFormat('es-ES');
+  function calc(){
+    var calls=+document.getElementById('c-calls').value, rate=+document.getElementById('c-rate').value, price=+document.getElementById('c-price').value;
+    document.getElementById('o-calls').textContent=calls;
+    document.getElementById('o-rate').textContent=rate+' %';
+    document.getElementById('o-price').textContent=price+' €';
+    var appts=Math.round(calls*4.3*rate/100);
+    document.getElementById('r-appts').textContent=fmt.format(appts);
+    document.getElementById('r-money').textContent=fmt.format(appts*price)+' €';
+  }
+  ['c-calls','c-rate','c-price'].forEach(function(id){ document.getElementById(id).addEventListener('input',calc); });
+  calc();
+
+  // Validación común
+  function setErr(input,bad){
+    var f=input.closest('.field'); if(!f) return;
+    f.classList.toggle('invalid',bad);
+    var e=f.querySelector('.err'); if(e) e.hidden=!bad;
+  }
+  function check(input){
+    var v=(input.value||'').trim(), bad=false;
+    if(input.type==='checkbox') bad=input.required && !input.checked;
+    else if(input.required && !v) bad=true;
+    else if(input.type==='tel' && v.replace(/\D/g,'').length<9) bad=true;
+    setErr(input,bad); return !bad;
+  }
+  function wire(form, sel, onOk){
+    var inputs=form.querySelectorAll(sel);
+    inputs.forEach(function(el){ el.addEventListener('blur',function(){check(el)}); el.addEventListener('change',function(){check(el)}); });
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var first=null;
+      inputs.forEach(function(el){ if(!check(el) && !first) first=el; });
+      if(first){ first.focus(); return; }
+      var btn=form.querySelector('button[type=submit]'), se=form.querySelector('.send-err');
+      btn.disabled=true; se.hidden=true;
+      fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()})
+        .then(function(r){ if(!r.ok) throw new Error(r.status); onOk(); })
+        .catch(function(){ se.hidden=false; })
+        .then(function(){ btn.disabled=false; });
+    });
+  }
+
+  // Formulario de análisis
+  var auditForm=document.getElementById('audit-form'), auditOk=document.getElementById('audit-ok');
+  wire(auditForm,'#a-web,#a-phone',function(){ auditForm.hidden=true; auditOk.hidden=false; });
+
+  // Formulario de maqueta
+  var form=document.getElementById('lead-form'), ok=document.getElementById('success');
+  wire(form,'#f-name,#f-biz,#f-phone,#f-hasweb,#f-ok',function(){
+    var name=document.getElementById('f-name').value.trim().split(' ')[0];
+    var biz=document.getElementById('f-biz').value.trim();
+    document.getElementById('success-title').textContent='¡Gracias, '+name+'!';
+    document.getElementById('success-text').textContent='Hemos recibido los datos de '+biz+'. Te llamamos en menos de 24 horas laborables para preparar tu maqueta.';
+    form.hidden=true; ok.hidden=false; ok.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+  });
+  document.getElementById('again').addEventListener('click',function(){
+    form.reset(); document.getElementById('plan-chosen').hidden=true; ok.hidden=true; form.hidden=false;
+  });
+})();
+</script>
+
+</body>
+</html>
