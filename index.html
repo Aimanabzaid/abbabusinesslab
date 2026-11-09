@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="marca/icono-app.png">
-<meta name="theme-color" content="#2A1F19">
+<meta name="theme-color" content="#1C1B1A">
 <meta property="og:title" content="ABBA Business Lab">
 <meta property="og:description" content="Páginas web con automatizaciones para centros de estética y clínicas.">
 <title>ABBA Business Lab</title>
@@ -19,15 +19,15 @@
 :root{
   --bg:#F6F7F7;
   --surface:#FFFFFF;
-  --ink:#2A1F19;
-  --muted:#76675D;
-  --line:#E4DFDA;
+  --ink:#1C1B1A;
+  --muted:#6B6865;
+  --line:#E4E5E5;
   --accent:#6B4A35;
   --accent-ink:#FFFFFF;
-  --accent-soft:#F0E9E3;
+  --accent-soft:#F3EEEA;
   --accent-2:#B48A66;
-  --blush:#EFE6DE;
-  --blush-ink:#5E3F2C;
+  --blush:#EEF0F0;
+  --blush-ink:#6B4A35;
   --ok:#1E7A4F;
   --ok-soft:#DDF1E6;
   --f-display:"Bodoni Moda", Didot, "Bodoni 72", Georgia, serif;
@@ -37,16 +37,16 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#15100D; --surface:#1F1814; --ink:#F4F1EE; --muted:#B4A69B; --line:#352A22;
-    --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#2D231C; --accent-2:#E3C6A6;
-    --blush:#2A201A; --blush-ink:#EBD2BE; --ok:#5BD49A; --ok-soft:#14301F;
+    --bg:#121212; --surface:#1B1B1A; --ink:#F3F2F1; --muted:#A9A6A3; --line:#2E2D2C;
+    --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#262220; --accent-2:#E3C6A6;
+    --blush:#222221; --blush-ink:#CFA882; --ok:#5BD49A; --ok-soft:#14301F;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#15100D; --surface:#1F1814; --ink:#F4F1EE; --muted:#B4A69B; --line:#352A22;
-  --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#2D231C; --accent-2:#E3C6A6;
-  --blush:#2A201A; --blush-ink:#EBD2BE; --ok:#5BD49A; --ok-soft:#14301F;
+  --bg:#121212; --surface:#1B1B1A; --ink:#F3F2F1; --muted:#A9A6A3; --line:#2E2D2C;
+  --accent:#CFA882; --accent-ink:#1A120C; --accent-soft:#262220; --accent-2:#E3C6A6;
+  --blush:#222221; --blush-ink:#CFA882; --ok:#5BD49A; --ok-soft:#14301F;
   color-scheme:dark;
 }
 
@@ -108,7 +108,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 /* Prueba visual: web de clínica + registro */
 .demo{position:relative;min-width:0}
 .demo-tag{position:absolute;top:-12px;left:18px;z-index:2;font:500 11.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--bg);padding:7px 10px;border-radius:6px}
-.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(42,31,25,.35)}
+.browser{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(20,20,20,.35)}
 .browser-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--line)}
 .browser-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
 .browser-bar .url{margin-left:10px;flex:1;min-width:0;font:400 12.5px/1 var(--f-mono);color:var(--muted);background:var(--bg);padding:7px 10px;border-radius:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -285,12 +285,12 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 @media (max-width:860px){.audit-grid{grid-template-columns:1fr;gap:28px}}
 
 /* Ejemplo */
-.example{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;text-decoration:none;background:var(--blush);border-radius:22px;padding:40px;transition:transform .2s}
+.example{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:40px;transition:transform .2s}
 .example:hover{transform:translateY(-2px)}
 .example-copy{display:grid;gap:16px;min-width:0}
 .example-copy h2{color:var(--ink)}
 .example-copy .btn{width:max-content}
-.example-shot{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(42,31,25,.45);min-width:0}
+.example-shot{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(20,20,20,.45);min-width:0}
 .ex-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);font:400 12px/1 var(--f-mono);color:var(--muted)}
 .ex-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
 .ex-bar span{margin-left:8px}
@@ -341,7 +341,7 @@ footer{padding-bottom:calc(48px + 70px)}
 
 /* Tarjetas que se levantan */
 .svc-group,.plan,.role,.problem-item,.step,.example{transition:transform .25s ease, box-shadow .25s ease}
-.svc-group:hover,.plan:hover,.role:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(60,40,28,.3)}
+.svc-group:hover,.plan:hover,.role:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(0,0,0,.18)}
 .svc-list li svg{transition:transform .3s}
 .svc-list li:hover svg{transform:scale(1.2) rotate(-6deg)}
 
