@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.classList.add("js")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="marca/icono-app.png">
@@ -16,14 +17,15 @@
 <style>
 /* Layout: un laboratorio limpio. Columna editorial a la izquierda, "pruebas" vivas (web + registro de automatizaciones) a la derecha. */
 :root{
-  --bg:#F2F4F3;
+  --bg:#F3F7F6;
   --surface:#FFFFFF;
   --ink:#121A22;
   --muted:#56626C;
   --line:#D9DFE2;
-  --accent:#2944D6;
+  --accent:#0B7A72;
   --accent-ink:#FFFFFF;
-  --accent-soft:#E3E8FB;
+  --accent-soft:#DCF1ED;
+  --accent-2:#5FD3C4;
   --blush:#F3DDD6;
   --blush-ink:#7A3E2E;
   --ok:#1E7A4F;
@@ -36,14 +38,14 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
-    --accent:#7D93FF; --accent-ink:#0B1020; --accent-soft:#1D2547;
+    --accent:#4FD1C1; --accent-ink:#06201D; --accent-soft:#123630; --accent-2:#4FD1C1;
     --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0E1318; --surface:#161D24; --ink:#E9EEF2; --muted:#9AA6B0; --line:#26313B;
-  --accent:#7D93FF; --accent-ink:#0B1020; --accent-soft:#1D2547;
+  --accent:#4FD1C1; --accent-ink:#06201D; --accent-soft:#123630; --accent-2:#4FD1C1;
   --blush:#3A2621; --blush-ink:#F1C2B3; --ok:#5BD49A; --ok-soft:#14301F;
   color-scheme:dark;
 }
@@ -86,7 +88,12 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .nav-links a{text-decoration:none;color:var(--muted)}
 .nav-links a:hover{color:var(--ink)}
 .nav .btn{padding:12px 18px;font-size:15px}
-@media (max-width:860px){.nav-links{display:none}}
+@media (max-width:860px){
+  .nav{flex-wrap:wrap;row-gap:10px}
+  .nav-links{order:3;width:100%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{flex:0 0 auto;font-size:14px;padding:8px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+}
 
 /* Hero */
 .hero{padding-block:64px 80px}
@@ -152,7 +159,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 
 /* Caso real */
 .case{background:var(--ink);color:var(--bg)}
-.case .label{color:#9FB0FF}
+.case .label{color:#7FE3D6}
 .case .lead{color:color-mix(in srgb, var(--bg) 72%, transparent)}
 .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
 .case-list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid color-mix(in srgb, var(--bg) 18%, transparent)}
@@ -310,11 +317,87 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .legal-docs summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:14.5px}
 .legal-docs p{font-size:14px;color:var(--muted);padding-bottom:12px;max-width:80ch}
 footer{padding-bottom:calc(48px + 70px)}
+
+/* ---------- Color y vida ---------- */
+.hero{position:relative;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;z-index:0;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none}
+.hero::before{width:520px;height:520px;background:var(--accent-soft);top:-160px;right:-120px;animation:blob 14s ease-in-out infinite alternate}
+.hero::after{width:380px;height:380px;background:var(--blush);bottom:-160px;left:-120px;animation:blob 18s ease-in-out infinite alternate-reverse}
+.hero .wrap{position:relative;z-index:1}
+@keyframes blob{to{transform:translate(-60px,50px) scale(1.15)}}
+.hero h1 em{background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% center}}
+.hero-copy>*{animation:up .8s cubic-bezier(.2,.7,.2,1) both}
+.hero-copy>*:nth-child(2){animation-delay:.08s}.hero-copy>*:nth-child(3){animation-delay:.16s}.hero-copy>*:nth-child(4){animation-delay:.24s}.hero-copy>*:nth-child(5){animation-delay:.32s}
+.demo{animation:up 1s .2s cubic-bezier(.2,.7,.2,1) both}
+.browser{animation:float 6s ease-in-out 1.2s infinite}
+@keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes float{50%{transform:translateY(-10px)}}
+
+/* Botones con brillo */
+.btn-primary{position:relative;overflow:hidden;box-shadow:0 10px 24px -12px var(--accent)}
+.btn-primary::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s ease}
+.btn-primary:hover::after{transform:translateX(120%)}
+
+/* Tarjetas que se levantan */
+.svc-group,.plan,.role,.problem-item,.step,.example{transition:transform .25s ease, box-shadow .25s ease}
+.svc-group:hover,.plan:hover,.role:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(11,60,56,.35)}
+.svc-list li svg{transition:transform .3s}
+.svc-list li:hover svg{transform:scale(1.2) rotate(-6deg)}
+
+/* Aparición al hacer scroll */
+.js .rv{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+
+/* Barra de oferta */
+.promo{display:block;text-decoration:none;background:linear-gradient(90deg,var(--accent),#0E9488,var(--accent));background-size:200% auto;animation:shine 8s linear infinite;color:#fff;font-size:14px;text-align:center}
+.promo-in{display:block;padding:9px max(16px, env(safe-area-inset-left,0px))}
+.promo-cta{font-weight:700;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.offer-pill{display:inline-flex;align-items:center;gap:10px;justify-self:start;max-width:100%;font-size:15px;padding:10px 16px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.offer-pill b{color:var(--accent)}
+.pulse{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent);animation:pulse 1.8s infinite;flex:0 0 auto}
+@keyframes pulse{70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+
+/* Precios con descuento */
+.plan-price{display:grid;gap:2px}
+.plan-price .old{font:500 15px/1 var(--f-mono);color:var(--muted);text-decoration:line-through}
+.plan-price .now{font:700 30px/1.1 var(--f-display);color:var(--ink)}
+.plan-price .now em{font:500 14px var(--f-body);font-style:normal;color:var(--muted)}
+.plan{position:relative}
+.plan::before{content:"-30 %";position:absolute;top:-12px;right:18px;font:700 12px/1 var(--f-mono);background:var(--accent);color:var(--accent-ink);padding:7px 9px;border-radius:999px}
+
+/* Cinta de sectores */
+.marquee{overflow:hidden;border-block:1px solid var(--line);background:var(--surface);padding-block:18px;margin-bottom:88px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee-track{display:flex;align-items:center;gap:28px;width:max-content;animation:marquee 32s linear infinite}
+.marquee span{font:700 clamp(18px,2.4vw,26px)/1 var(--f-display);white-space:nowrap;letter-spacing:-.01em}
+.marquee i{width:10px;height:10px;border-radius:50%;background:var(--accent-2);flex:0 0 auto}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* Referidos */
+.refer{background:linear-gradient(160deg,var(--accent-soft),var(--bg) 70%)}
+.refer-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.refer-copy{display:grid;gap:18px}
+.refer-steps{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:14px}
+.refer-steps li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start}
+.rs-n{width:40px;height:40px;border-radius:12px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 16px var(--f-display)}
+.refer-steps b{display:block}
+.refer-steps span:not(.rs-n){color:var(--muted);font-size:15px}
+.refer-note{font:500 13.5px/1.5 var(--f-mono);color:var(--accent)}
+.refer-card{position:relative;padding-top:36px}
+.refer-ticket{position:absolute;top:0;right:24px;z-index:2;background:var(--ink);color:var(--bg);border-radius:16px;padding:14px 18px;display:grid;justify-items:center;transform:rotate(6deg);animation:wobble 4s ease-in-out infinite;box-shadow:0 18px 30px -18px rgba(0,0,0,.6)}
+.refer-ticket span{font:700 30px/1 var(--f-display);color:var(--accent-2)}
+.refer-ticket small{font:500 11px/1.4 var(--f-mono);text-transform:uppercase;letter-spacing:.06em}
+@keyframes wobble{50%{transform:rotate(1deg) translateY(-6px)}}
+.refer-form{background:var(--surface)}
+@media (max-width:860px){.refer-grid{grid-template-columns:1fr;gap:36px}}
+
+@media (prefers-reduced-motion: reduce){.js .rv{opacity:1;transform:none}.marquee-track{animation:none}}
 </style>
 
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}.hp{display:none!important}</style>
 </head>
 <body>
+<a class="promo" href="#planes"><span class="promo-in"><b>Oferta de lanzamiento</b> · 30 % de descuento en tu web para los 3 primeros centros <span class="promo-cta">Ver planes →</span></span></a>
 <header class="top">
   <div class="wrap nav">
     <a class="brand" href="#inicio" aria-label="ABBA Business Lab, inicio">
@@ -327,6 +410,7 @@ footer{padding-bottom:calc(48px + 70px)}
       <a href="#caso">Caso real</a>
       <a href="#proceso">Cómo trabajamos</a>
       <a href="#planes">Planes</a>
+      <a href="#referidos">Referidos</a>
       <a href="#faq">Preguntas</a>
     </nav>
     <a class="btn btn-primary" href="#contacto">Pide tu maqueta gratis</a>
@@ -491,13 +575,16 @@ footer{padding-bottom:calc(48px + 70px)}
           </ul>
         </div>
       </div>
-      <div class="sectors" aria-label="Sectores con los que trabajamos">
-        <span class="main">Centros de estética</span>
-        <span class="main">Clínicas</span>
-        <span>Medicina estética</span><span>Dental</span><span>Fisioterapia</span><span>Podología</span><span>Psicología</span><span>Peluquería y barbería</span>
-      </div>
+      
     </div>
   </section>
+
+  <div class="marquee" aria-label="Sectores con los que trabajamos">
+    <div class="marquee-track">
+      <span>Centros de estética</span><i></i><span>Clínicas dentales</span><i></i><span>Medicina estética</span><i></i><span>Fisioterapia</span><i></i><span>Podología</span><i></i><span>Psicología</span><i></i><span>Peluquería y barbería</span><i></i><span>Nutrición</span><i></i>
+      <span aria-hidden="true">Centros de estética</span><i></i><span aria-hidden="true">Clínicas dentales</span><i></i><span aria-hidden="true">Medicina estética</span><i></i><span aria-hidden="true">Fisioterapia</span><i></i><span aria-hidden="true">Podología</span><i></i><span aria-hidden="true">Psicología</span><i></i><span aria-hidden="true">Peluquería y barbería</span><i></i><span aria-hidden="true">Nutrición</span><i></i>
+    </div>
+  </div>
 
   <!-- EJEMPLO DEL SECTOR -->
   <section id="ejemplo" style="padding-top:0">
@@ -564,25 +651,61 @@ footer{padding-bottom:calc(48px + 70px)}
         <span class="label">Planes</span>
         <h2>Empieza por lo que necesitas hoy.</h2>
         <p class="lead">Precios de partida, IVA no incluido. Te damos un precio cerrado después de ver tu maqueta.</p>
+        <div class="offer-pill"><span class="pulse" aria-hidden="true"></span>Oferta de lanzamiento: <b>30 % de descuento</b> para los 3 primeros centros</div>
       </div>
       <div class="plans">
         <div class="plan">
           <div class="plan-top"><span class="tag">Presencia</span><h3>Web básica</h3></div>
-          <div class="plan-price">Desde 390 €<small>Pago único. Para centros que aún no tienen web.</small></div>
+          <div class="plan-price"><span class="old">299 €</span><span class="now"><em>Desde</em> 209 €</span><small>Pago único. Precio normal desde 299 €.</small></div>
           <ul><li>Web de una página</li><li>Tratamientos y precios</li><li>Botón de WhatsApp y llamada</li><li>Mapa, horario y reseñas</li></ul>
           <a class="btn btn-ghost" href="#contacto" data-plan="Web básica">Pedir maqueta</a>
         </div>
         <div class="plan featured">
           <div class="plan-top"><span class="tag">El más pedido</span><h3>Web con reservas</h3></div>
-          <div class="plan-price">Desde 790 €<small>Pago único. Para llenar la agenda sin coger el teléfono.</small></div>
+          <div class="plan-price"><span class="old">599 €</span><span class="now"><em>Desde</em> 419 €</span><small>Pago único. Precio normal desde 599 €.</small></div>
           <ul><li>Todo lo de Web básica</li><li>Varias páginas y galería</li><li>Reservas online 24 h</li><li>Confirmaciones y recordatorios</li><li>SEO local</li></ul>
           <a class="btn btn-primary" href="#contacto" data-plan="Web con reservas">Pedir maqueta</a>
         </div>
         <div class="plan">
           <div class="plan-top"><span class="tag">Gestión completa</span><h3>Web + automatización</h3></div>
-          <div class="plan-price">Desde 1.290 €<small>+ 49 €/mes de mantenimiento. Para delegar toda la parte digital.</small></div>
+          <div class="plan-price"><span class="old">990 €</span><span class="now"><em>Desde</em> 693 €</span><small>+ 39 €/mes de mantenimiento. Precio normal desde 990 €.</small></div>
           <ul><li>Todo lo de Web con reservas</li><li>Fichas de clientas y área privada</li><li>Cobro de señales online</li><li>Mantenimiento mensual</li><li>Mejoras continuas</li></ul>
           <a class="btn btn-ghost" href="#contacto" data-plan="Web + automatización">Pedir maqueta</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERIDOS -->
+  <section class="refer" id="referidos">
+    <div class="wrap refer-grid">
+      <div class="refer-copy">
+        <span class="label">Programa de referidos</span>
+        <h2>Recomienda un centro y gana 50 €.</h2>
+        <p class="lead">¿Conoces una clínica o un centro de estética que necesite web? Pásanos su contacto. Si contrata, tú te llevas 50 € y ellos un 10 % de descuento.</p>
+        <ol class="refer-steps">
+          <li><span class="rs-n">1</span><div><b>Nos dices quién</b><span>Su nombre y cómo contactarle.</span></div></li>
+          <li><span class="rs-n">2</span><div><b>Le preparamos su maqueta</b><span>Gratis, como a todos.</span></div></li>
+          <li><span class="rs-n">3</span><div><b>Si contrata, cobras</b><span>50 € por Bizum o transferencia.</span></div></li>
+        </ol>
+        <p class="refer-note">Sin límite: 3 centros recomendados que contraten son 150 €.</p>
+      </div>
+      <div class="refer-card">
+        <div class="refer-ticket" aria-hidden="true"><span>50 €</span><small>por cada centro</small></div>
+        <form id="ref-form" class="refer-form" name="referido" novalidate>
+          <input type="hidden" name="subject" value="Nuevo referido · ABBA Business Lab"><input type="hidden" name="from_name" value="Web ABBA Business Lab"><input type="hidden" name="formulario" value="referido"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="row2">
+            <div class="field"><label for="r-name">Tu nombre</label><input id="r-name" name="tu_nombre" type="text" autocomplete="name" placeholder="Tu nombre" required><span class="err" hidden>Escribe tu nombre.</span></div>
+            <div class="field"><label for="r-phone">Tu teléfono</label><input id="r-phone" name="tu_telefono" type="tel" autocomplete="tel" placeholder="600 000 000" required><span class="err" hidden>Escribe un teléfono válido.</span></div>
+          </div>
+          <div class="field"><label for="r-biz">Centro que recomiendas</label><input id="r-biz" name="centro_recomendado" type="text" placeholder="Nombre y ciudad" required><span class="err" hidden>Escribe el nombre del centro.</span></div>
+          <div class="field"><label for="r-contact">Contacto del centro <span class="hint">(opcional)</span></label><input id="r-contact" name="contacto_centro" type="text" placeholder="Teléfono, persona o Instagram"></div>
+          <button class="btn btn-primary" type="submit">Enviar recomendación</button>
+          <span class="err send-err" hidden>No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.</span>
+        </form>
+        <div class="success" id="ref-ok" hidden role="status" aria-live="polite">
+          <h3>¡Gracias por recomendarnos!</h3>
+          <p>Contactaremos con el centro y te avisamos por WhatsApp de cómo va.</p>
         </div>
       </div>
     </div>
@@ -609,6 +732,7 @@ footer{padding-bottom:calc(48px + 70px)}
     <div class="wrap">
       <div class="sec-head"><span class="label">Preguntas frecuentes</span><h2>Lo que nos suelen preguntar.</h2></div>
       <div class="faq">
+        <details><summary>¿Cómo funciona la oferta de lanzamiento?</summary><p>Los 3 primeros centros que contraten su web tienen un 30 % de descuento sobre el precio del plan. A cambio, nos dejas enseñar tu web como ejemplo y, si quedas contento, una reseña en Google.</p></details>
         <details open><summary>¿De verdad la maqueta es gratis?</summary><p>Sí. Te preparamos una web de prueba con los datos de tu negocio para que veas cómo quedaría. Si no te convence, no pagas nada.</p></details>
         <details><summary>¿Cuánto tardáis en tenerla lista?</summary><p>La maqueta, en pocos días. La web terminada depende de las automatizaciones que elijas y de lo rápido que tengamos tus textos y fotos.</p></details>
         <details><summary>No tengo fotos profesionales. ¿Es un problema?</summary><p>No. Empezamos con las fotos de tu ficha de Google y tus redes, y te decimos qué fotos merece la pena hacer para que la web luzca más.</p></details>
@@ -688,7 +812,7 @@ footer{padding-bottom:calc(48px + 70px)}
         <p>Páginas web con automatizaciones para centros de estética y clínicas de toda España.</p>
       </div>
       <div><h4>Secciones</h4><ul><li><a href="#servicios">Servicios</a></li><li><a href="#caso">Caso real</a></li><li><a href="#proceso">Cómo trabajamos</a></li><li><a href="#planes">Planes</a></li><li><a href="#faq">Preguntas</a></li></ul></div>
-      <div><h4>Contacto</h4><ul><li>WhatsApp: <a href="https://wa.me/34634606212" target="_blank" rel="noopener">634 60 62 12</a></li><li>Teléfono: <a href="tel:+34634606212">634 60 62 12</a></li><li>Email: <a href="mailto:infoabbabusinesslab@gmail.com">infoabbabusinesslab@gmail.com</a></li><li>Instagram: [@tuperfil]</li><li><a href="#legal">Aviso legal y privacidad</a></li></ul></div>
+      <div><h4>Contacto</h4><ul><li>WhatsApp: <a href="https://wa.me/34634606212" target="_blank" rel="noopener">634 60 62 12</a></li><li>Teléfono: <a href="tel:+34634606212">634 60 62 12</a></li><li>Email: <a href="mailto:infoabbabusinesslab@gmail.com">infoabbabusinesslab@gmail.com</a></li><li><a href="#legal">Aviso legal y privacidad</a></li></ul></div>
     </div>
     <div class="legal-docs" id="legal">
       <details><summary>Aviso legal</summary>
@@ -747,14 +871,20 @@ footer{padding-bottom:calc(48px + 70px)}
 
   // Calculadora
   var fmt=new Intl.NumberFormat('es-ES');
+  var cur={};
+  function tween(id,to,suf){
+    var el=document.getElementById(id), from=cur[id]||0; cur[id]=to;
+    if(reduce){ el.textContent=fmt.format(to)+suf; return; }
+    var t0=performance.now();
+    (function step(t){ var k=Math.min(1,(t-t0)/450), v=Math.round(from+(to-from)*(1-Math.pow(1-k,3))); el.textContent=fmt.format(v)+suf; if(k<1) requestAnimationFrame(step); })(t0);
+  }
   function calc(){
     var calls=+document.getElementById('c-calls').value, rate=+document.getElementById('c-rate').value, price=+document.getElementById('c-price').value;
     document.getElementById('o-calls').textContent=calls;
     document.getElementById('o-rate').textContent=rate+' %';
     document.getElementById('o-price').textContent=price+' €';
     var appts=Math.round(calls*4.3*rate/100);
-    document.getElementById('r-appts').textContent=fmt.format(appts);
-    document.getElementById('r-money').textContent=fmt.format(appts*price)+' €';
+    tween('r-appts',appts,''); tween('r-money',appts*price,' €');
   }
   ['c-calls','c-rate','c-price'].forEach(function(id){ document.getElementById(id).addEventListener('input',calc); });
   calc();
@@ -790,6 +920,20 @@ footer{padding-bottom:calc(48px + 70px)}
         .then(function(){ btn.disabled=false; });
     });
   }
+
+  // Aparición al hacer scroll
+  if(!reduce && 'IntersectionObserver' in window){
+    var sel='.sec-head,.problem-item,.svc-group,.example,.case-list li,.step,.plan,.role,.faq details,.calc-box,.refer-card,.refer-steps li,.contact-aside,#lead-form';
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll(sel).forEach(function(el){
+      var sib=el.parentElement?Array.prototype.indexOf.call(el.parentElement.children,el):0;
+      el.style.transitionDelay=Math.min(sib,5)*70+'ms'; el.classList.add('rv'); io.observe(el);
+    });
+  } else { document.documentElement.classList.remove('js'); }
+
+  // Formulario de referidos
+  var refForm=document.getElementById('ref-form'), refOk=document.getElementById('ref-ok');
+  wire(refForm,'#r-name,#r-phone,#r-biz',function(){ refForm.hidden=true; refOk.hidden=false; });
 
   // Formulario de análisis
   var auditForm=document.getElementById('audit-form'), auditOk=document.getElementById('audit-ok');
