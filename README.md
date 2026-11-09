@@ -2,7 +2,7 @@
 
 Web de ABBA Business Lab: páginas web con automatizaciones para centros de estética y clínicas.
 
-- `index.html`: web principal (formularios de Netlify «maqueta» y «analisis»).
+- `index.html`: web principal (formularios «maqueta» y «analisis», enviados por Web3Forms al email del titular).
 - `demo-estetica.html`: web de ejemplo de un centro de estética ficticio (Nácar).
 - `favicon.svg`: icono.
 

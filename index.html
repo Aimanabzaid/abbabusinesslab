@@ -310,7 +310,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 footer{padding-bottom:calc(48px + 70px)}
 </style>
 
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}.hp{display:none!important}</style>
 </head>
 <body>
 <header class="top">
@@ -447,8 +447,8 @@ footer{padding-bottom:calc(48px + 70px)}
         <h2>¿Tu web te trae clientas? Te la analizamos.</h2>
         <p class="lead">Déjanos tu web o tu ficha de Google y te enviamos por WhatsApp 4 mejoras concretas: velocidad, móvil, reservas y cómo apareces en Google.</p>
       </div>
-      <form id="audit-form" class="audit-form" name="analisis" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
-        <input type="hidden" name="form-name" value="analisis"><p hidden><label>No rellenar <input name="bot-field"></label></p>
+      <form id="audit-form" class="audit-form" name="analisis" novalidate>
+        <input type="hidden" name="subject" value="Nueva solicitud de análisis gratis · ABBA Business Lab"><input type="hidden" name="from_name" value="Web ABBA Business Lab"><input type="hidden" name="formulario" value="analisis"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="field"><label for="a-web">Tu web o el nombre de tu centro en Google</label><input id="a-web" name="web_o_ficha" type="text" placeholder="tucentro.es o «Centro X, Madrid»" required><span class="err" hidden>Escribe tu web o el nombre de tu centro.</span></div>
         <div class="field"><label for="a-phone">Tu WhatsApp</label><input id="a-phone" name="whatsapp" type="tel" autocomplete="tel" placeholder="600 000 000" required><span class="err" hidden>Escribe un teléfono válido.</span></div>
         <button class="btn btn-primary" type="submit">Quiero mi análisis gratis</button>
@@ -637,8 +637,8 @@ footer{padding-bottom:calc(48px + 70px)}
       </div>
 
       <div>
-        <form id="lead-form" name="maqueta" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
-          <input type="hidden" name="form-name" value="maqueta"><p hidden><label>No rellenar <input name="bot-field"></label></p>
+        <form id="lead-form" name="maqueta" novalidate>
+          <input type="hidden" name="subject" value="Nueva solicitud de maqueta gratis · ABBA Business Lab"><input type="hidden" name="from_name" value="Web ABBA Business Lab"><input type="hidden" name="formulario" value="maqueta"><input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           <div class="row2">
             <div class="field"><label for="f-name">Tu nombre</label><input id="f-name" name="nombre" type="text" autocomplete="name" placeholder="Ej.: Laura Gómez" required><span class="err" hidden>Escribe tu nombre.</span></div>
             <div class="field"><label for="f-biz">Nombre del centro</label><input id="f-biz" name="negocio" type="text" autocomplete="organization" placeholder="Ej.: Centro Lumen, Madrid" required><span class="err" hidden>Escribe el nombre de tu centro.</span></div>
@@ -712,6 +712,8 @@ footer{padding-bottom:calc(48px + 70px)}
 (function(){
   // Pon aquí tu número con prefijo, sin espacios ni +. Ej.: '34600000000'
   var WHATSAPP = '';
+  // Clave pública de Web3Forms: los formularios llegan al email configurado allí
+  var WEB3FORMS_KEY = '6182fa0d-c6a7-4d1e-912c-85ec96967e89';
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Botón flotante de WhatsApp
@@ -778,8 +780,10 @@ footer{padding-bottom:calc(48px + 70px)}
       if(first){ first.focus(); return; }
       var btn=form.querySelector('button[type=submit]'), se=form.querySelector('.send-err');
       btn.disabled=true; se.hidden=true;
-      fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()})
-        .then(function(r){ if(!r.ok) throw new Error(r.status); onOk(); })
+      var data=Object.fromEntries(new FormData(form)); data.access_key=WEB3FORMS_KEY;
+      fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+        .then(function(r){ return r.json(); })
+        .then(function(j){ if(!j.success) throw new Error(j.message); onOk(); })
         .catch(function(){ se.hidden=false; })
         .then(function(){ btn.disabled=false; });
     });
